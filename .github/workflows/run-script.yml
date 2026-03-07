@@ -2,7 +2,7 @@ name: Email Backup
 
 on:
   schedule:
-    - cron: "*/10 * * * *"   # every 10 minutes
+   - cron: "0 2 * * 0"   # runs every Sunday at 02:00 UTC
   workflow_dispatch:
 
 jobs:
