@@ -24,14 +24,17 @@ jobs:
           pip install -r requirements.txt
 
       - name: Restore Google OAuth files
+        shell: bash
         run: |
-          cat <<EOF > credentials.json
-          ${{ secrets.GOOGLE_CREDENTIALS_JSON }}
-          EOF
-
-          cat <<EOF > token.json
-          ${{ secrets.GOOGLE_TOKEN_JSON }}
-          EOF
+          echo "${{ secrets.GOOGLE_CREDENTIALS_JSON }}" | base64 --decode > credentials.json
+          echo "${{ secrets.GOOGLE_TOKEN_JSON }}" | base64 --decode > token.json
+      - name: Debug restored files
+        run: |
+             ls -l
+             echo "credentials.json size:"
+             wc -c credentials.json
+             echo "token.json size:"
+             wc -c token.json
 
       - name: Run backup
         env:
