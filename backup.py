@@ -15,6 +15,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 # -------------------------
 
 IMAP_SERVER = "imap.gmail.com"
+
 EMAIL_ACCOUNT = os.environ["GMAIL_EMAIL"]
 APP_PASSWORD = os.environ["GMAIL_APP_PASSWORD"]
 
