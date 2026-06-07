@@ -1,0 +1,50 @@
+
+name: Obsidian Backup
+
+on:
+  schedule:
+    - cron: '0 2 * * 0'   # Weekly on Sunday at 02:00 UTC
+  workflow_dispatch:
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run backup
+        env:
+          GMAIL_EMAIL: ${{ secrets.GMAIL_EMAIL }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+        run: python backup.py
+
+      - name: Commit new notes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add Journal/
+
+          git diff --cached --quiet && echo "No changes to commit" && exit 0
+
+          git commit -m "Automated Obsidian backup"
+
+      - name: Push changes
+        run: git push
+
